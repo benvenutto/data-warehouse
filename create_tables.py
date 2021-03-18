@@ -4,12 +4,16 @@ from sql_queries import create_table_queries, drop_table_queries
 
 
 def drop_tables(cur, conn):
+    """Iterate through the list of tables that may exist in the database, and conditionally drop each table.
+    """
     for query in drop_table_queries:
         cur.execute(query)
         conn.commit()
 
 
 def create_tables(cur, conn):
+    """Iterate through the list of tables to be created, and create each table.
+    """
     for query in create_table_queries:
         cur.execute(query)
         conn.commit()
@@ -19,9 +23,7 @@ def main():
     config = configparser.ConfigParser()
     config.read('dwh.cfg')
 
-    for key in config['CLUSTER']:
-        print(f"{key} = {config['CLUSTER'][key]}")
-    
+    print("Connection string: host={} dbname={} user={} password={} port={}".format(*config['CLUSTER'].values()))
     conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(*config['CLUSTER'].values()))
     cur = conn.cursor()
 
