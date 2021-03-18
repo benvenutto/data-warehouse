@@ -20,18 +20,25 @@ def load_staging_tables(cur, conn, s3_buckets):
             cur.execute(query.format(*s3_buckets[idx]))
             conn.commit()
         except Exception as err:
-            print("Exception: " + err)
-            conn.rollback()
-            cur.execute('select * from stl_load_errors')
-            errors = cur.fetchall()
-            for error in errors:
-                print(error)
+            print_diagnostics(cur, conn, err)
 
 
 def insert_tables(cur, conn):
     for query in insert_table_queries:
         cur.execute(query)
         conn.commit()
+
+def print_diagnostics(cur, conn, err=None):
+    """Print diagnostic information stored in stl_load_errors system table
+    """
+
+    if err is not None:
+        print("Exception: " + err)
+    conn.rollback()
+    cur.execute('select * from stl_load_errors')
+    errors = cur.fetchall()
+    for error in errors:
+        print(error)
 
 
 def main():
