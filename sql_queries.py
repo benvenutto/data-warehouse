@@ -34,7 +34,7 @@ CREATE TABLE staging_songs (
 
 staging_events_table_create= ('''
 CREATE TABLE staging_events (
-    artist              VARCHAR NOT NULL,
+    artist              VARCHAR NULL,
     auth                VARCHAR NOT NULL,
     first_name          VARCHAR NOT NULL,
     gender              VARCHAR NOT NULL,

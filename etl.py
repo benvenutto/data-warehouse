@@ -1,18 +1,19 @@
 import configparser
 import psycopg2
+import argparse
+
 from sql_queries import copy_table_queries, insert_table_queries
 
 s3_buckets = [
-                (
+                [
                     's3://udacity-dend/song_data',
                     'arn:aws:iam::962755301980:role/RedshiftCopyUnload'
-                ), (
+                ], [
                     's3://udacity-dend/log_data',
                     'arn:aws:iam::962755301980:role/RedshiftCopyUnload',
                     's3://udacity-dend/log_json_path.json'
-                )
+                ]
 ]
-
 
 def load_staging_tables(cur, conn, s3_buckets):
     for idx, query in enumerate(copy_table_queries):
@@ -51,6 +52,14 @@ def print_copy_diagnostics(cur, conn, err=None):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--test', action="store_true")
+    args = parser.parse_args()
+    if args.test:
+        s3_buckets[0][0] = 's3://udacity-dend/song-data/A/A/'
+        s3_buckets[1][0] = 's3://udacity-dend/log-data/2018/11/2018-11-01-events.json'
+        print('Loading test data subset.')
+
     config = configparser.ConfigParser()
     config.read('dwh.cfg')
     arn = config['IAM_ROLE']['ARN']
