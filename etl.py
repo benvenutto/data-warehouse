@@ -13,32 +13,41 @@ s3_buckets = [
                 )
 ]
 
+
 def load_staging_tables(cur, conn, s3_buckets):
     for idx, query in enumerate(copy_table_queries):
-        # print(f'Executing query: {query.format(*s3_buckets[idx])}')
+        print(f'Executing query: {query.format(*s3_buckets[idx])}')
         try:
             cur.execute(query.format(*s3_buckets[idx]))
             conn.commit()
         except Exception as err:
-            print_diagnostics(cur, conn, err)
+            print_copy_diagnostics(cur, conn, err)
+            raise
 
 
 def insert_tables(cur, conn):
     for query in insert_table_queries:
-        cur.execute(query)
-        conn.commit()
+        print(f'Executing query: {query}')
+        try:
+            cur.execute(query)
+            conn.commit()
+        except Exception as err:
+            print("Insert exception: " + str(err))
+            raise
 
-def print_diagnostics(cur, conn, err=None):
+
+def print_copy_diagnostics(cur, conn, err=None):
     """Print diagnostic information stored in stl_load_errors system table
     """
 
     if err is not None:
-        print("Exception: " + err)
-    conn.rollback()
-    cur.execute('select * from stl_load_errors')
+        print("Load exception: " + str(err))
+    conn.commit()
+    cur.execute("select to_char(starttime, 'DD-MM HH:MI:SS'), trim(colname), position, raw_field_value, err_reason, trim(filename) " +
+                "from stl_load_errors;")
     errors = cur.fetchall()
     for error in errors:
-        print(error)
+        print(f'Load error: {error}')
 
 
 def main():
