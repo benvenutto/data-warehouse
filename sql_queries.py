@@ -85,8 +85,8 @@ DISTSTYLE EVEN
 
 song_table_create = ('''
 CREATE TABLE song (
-    song_id             VARCHAR NOT NULL    SORTKEY, 
-    title               VARCHAR NOT NULL, 
+    song_id             VARCHAR NOT NULL, 
+    title               VARCHAR NOT NULL    SORTKEY, 
     artist_id           VARCHAR NOT NULL, 
     year                INT     NOT NULL, 
     duration            REAL    NOT NULL
@@ -96,8 +96,8 @@ DISTSTYLE EVEN
 
 artist_table_create = ('''
 CREATE TABLE artist (
-    artist_id           VARCHAR NOT NULL    SORTKEY, 
-    name                VARCHAR NOT NULL, 
+    artist_id           VARCHAR NOT NULL, 
+    name                VARCHAR NOT NULL    SORTKEY, 
     location            VARCHAR NULL, 
     latitude            BIGINT  NULL, 
     longitude           BIGINT  NULL
