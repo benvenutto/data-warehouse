@@ -5,6 +5,11 @@ from sql_queries import create_table_queries, drop_table_queries
 
 def drop_tables(cur, conn):
     """Iterate through the list of tables that may exist in the database, and conditionally drop each table.
+
+    Args:
+        cur:    an open cursor.
+        conn:   a database connection.
+
     """
     for query in drop_table_queries:
         cur.execute(query)
@@ -13,6 +18,11 @@ def drop_tables(cur, conn):
 
 def create_tables(cur, conn):
     """Iterate through the list of tables to be created, and create each table.
+
+    Args:
+        cur:    an open cursor.
+        conn:   a database connection.
+
     """
     for query in create_table_queries:
         cur.execute(query)
