@@ -17,7 +17,6 @@ an ingres policy needs to be associated with the VPC.
 
 Because the first copy command (the song data) is long running, as many directories and JSON files in the bucket must be 
 traversed and parsed, initially I was getting a hang problem with the Python script: somewhere along the route the connection 
-was broken and the Python script database driver saw no more responses from RedShift. This is a known problem,
 and TCP keep alive parameters were added to the connection string to work around the issue.
 
 ## Contents
